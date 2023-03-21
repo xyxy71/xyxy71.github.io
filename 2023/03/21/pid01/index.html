@@ -1,0 +1,278 @@
+<!DOCTYPE html><html lang="zH-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>PID算法(一) | 🔆｜·͜·˖today♬</title><meta name="author" content="liu☆☆"><meta name="copyright" content="liu☆☆"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1、PID的概念PID算法是工业应用中最广泛算法之一，在闭环系统的控制中，可自动对控制系统进行准确且迅速的校正。PID算法已经有100多年历史，在四轴飞行器，平衡小车、汽车定速巡航、温度控制器等场景均有应用。 PID算法：就是“比例（proportional）、积分（integral）、微分（derivative）”，是一种常见的“保持稳定”控制算法。 常规的模拟PID控制系统原理框图如下所示:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PID算法(一)">
+<meta property="og:url" content="http://xyxy71.github.io/2023/03/21/pid01/index.html">
+<meta property="og:site_name" content="🔆｜·͜·˖today♬">
+<meta property="og:description" content="1、PID的概念PID算法是工业应用中最广泛算法之一，在闭环系统的控制中，可自动对控制系统进行准确且迅速的校正。PID算法已经有100多年历史，在四轴飞行器，平衡小车、汽车定速巡航、温度控制器等场景均有应用。 PID算法：就是“比例（proportional）、积分（integral）、微分（derivative）”，是一种常见的“保持稳定”控制算法。 常规的模拟PID控制系统原理框图如下所示:">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s1.vika.cn/space/2023/01/27/235800f902f945cba7a5d070775ed46f">
+<meta property="article:published_time" content="2023-03-21T03:08:08.804Z">
+<meta property="article:modified_time" content="2023-03-21T03:07:43.718Z">
+<meta property="article:author" content="liu☆☆">
+<meta property="article:tag" content="STM32">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.vika.cn/space/2023/01/27/235800f902f945cba7a5d070775ed46f"><link rel="shortcut icon" href="/img/e.jpg"><link rel="canonical" href="http://xyxy71.github.io/2023/03/21/pid01/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"绻?","msgToSimplifiedChinese":"绨?"},
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":230},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: 'days',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"Traditional Chinese Activated Manually","cht_to_chs":"Simplified Chinese Activated Manually","day_to_night":"Dark Mode Activated Manually","night_to_day":"Light Mode Activated Manually","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"top-right"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: true,
+  islazyload: true,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'PID算法(一)',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-03-21 11:07:43'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const now = new Date()
+          const hour = now.getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://www.fomal.cc/static/css/runtime.min.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head><body><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js/themes/blue/pace-theme-minimal.min.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js/pace.min.js"></script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/sq.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">1</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fas fa-envelope-open"></i><span> comments</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://s1.vika.cn/space/2023/01/27/235800f902f945cba7a5d070775ed46f')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">🔆｜·͜·˖today♬</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fas fa-envelope-open"></i><span> comments</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">PID算法(一)</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-03-21T03:08:08.804Z" title="Created 2023-03-21 11:08:08">2023-03-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-03-21T03:07:43.718Z" title="Updated 2023-03-21 11:07:43">2023-03-21</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/STM32/">STM32</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">2.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>6min</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="PID算法(一)"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="1、PID的概念"><a href="#1、PID的概念" class="headerlink" title="1、PID的概念"></a>1、PID的概念</h1><p>PID算法是工业应用中最广泛算法之一，在闭环系统的控制中，可自动对控制系统进行准确且迅速的校正。PID算法已经有100多年历史，在四轴飞行器，平衡小车、汽车定速巡航、温度控制器等场景均有应用。</p>
+<p><strong>PID算法：就是“比例（proportional）、积分（integral）、微分（derivative）”，是一种常见的“保持稳定”控制算法。</strong></p>
+<p>常规的模拟PID控制系统原理框图如下所示:</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.staticaly.com/gh/QM1412/blog_bed@main/img/image-20230213101736869.png" alt="image-20230213101736869"></p>
+<p>因此可以得出e(t)和u(t)的关系：</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.staticaly.com/gh/QM1412/blog_bed@main/img/image-20230213101801907.png" alt="image-20230213101801907"></p>
+<p>其中：</p>
+<ul>
+<li><p>Kp：比例增益，是调适参数；</p>
+</li>
+<li><p>Ki：积分增益，也是调适参数；</p>
+</li>
+<li><p>Kd：微分增益，也是调适参数；</p>
+</li>
+<li><p>e：误差=设定值（SP）- 回授值（PV）；</p>
+</li>
+<li><p>t：目前时间。</p>
+</li>
+</ul>
+<p>数学公式可能比较枯燥，通过以下例子，了解PID算法的应用。</p>
+<p>例如，使用控制器使一锅水的温度保持在50℃，小于50℃就让它加热，大于50度就断电不就行了？</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.staticaly.com/gh/QM1412/blog_bed@main/img/image-20230213102008694.png" alt="image-20230213102008694"></p>
+<p>假如要求不搞的情况下可以这么做，但是要维持在50°C就比较困难，正如图中小人一样，只有低于50才加热，高于50就断开，那么温度就会在50上下来回震荡，很难接近50使之稳定。</p>
+<p>设想一下，假如汽车的定速巡航电脑在某一时间测到车速是45km/h，它立刻命令发动机：加速！</p>
+<p>结果，发动机那边突然来了个100%全油门，嗡的一下汽车急加速到了60km/h，这时电脑又发出命令：刹车！结果乘客吐……</p>
+<p>所以，在大多数场合中，用“开关量”来控制一个物理量就显得比较简单粗暴了，有时候是无法保持稳定的，因为单片机、传感器不是无限快的，采集、控制需要时间。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.staticaly.com/gh/QM1412/blog_bed@main/img/image-20230213102443083.png" alt="image-20230213102443083"></p>
+<p><strong>（1）Kp比例增益</strong></p>
+<p>Kp比例控制考虑当前误差，误差值和一个正值的常数Kp（表示比例）相乘。需要控制的量，比如水温，有它现在的<strong>当前值</strong>，也有我们期望的<strong>目标值</strong>。</p>
+<ul>
+<li><p>当两者差距不大时，就让加热器“轻轻地”加热一下。</p>
+</li>
+<li><p>要是因为某些原因，温度降低了很多，就让加热器“稍稍用力”加热一下。</p>
+</li>
+<li><p>要是当前温度比目标温度低得多，就让加热器“开足马力”加热，尽快让水温到达目标附近。</p>
+</li>
+</ul>
+<p>通俗的来讲就是P就是响应速度，例如，当烧水的时候，一开始是20℃，要加热到90℃，这个时候误差e=70℃，那么就要加大火力去让温度上升，当温度到达65℃，误差e=5℃，这个时候就不用这么大火力去烧水。</p>
+<p>实际写程序时，就让偏差（目标减去当前）与调节装置的“调节力度”，建立一个一次函数的关系，就可以实现最基本的“比例”控制了~</p>
+<p>Kp越大，调节作用越激进，Kp调小会让调节作用更保守。</p>
+<p>但是，这个也有缺点，若只用“比例控制”的话，那么就无时无刻都会有误差，当e=0的时候，系统就不再控制了，这样整个系统就会来回震荡。若你正在制作一个平衡车，有了P的作用，你会发现，平衡车在平衡角度附近来回“狂抖”，比较难稳住。</p>
+<p><strong>（2）Kd微分增益</strong></p>
+<p>Kd微分控制考虑将来误差，计算误差的一阶导，并和一个正值的常数Kd相乘。（看的是趋势，也就是<strong>误差之差</strong>）</p>
+<p>有了P的作用，不难发现，只有P好像不能让平衡车站起来，水温也控制得晃晃悠悠，好像整个系统不是特别稳定，总是在“抖动”。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.staticaly.com/gh/QM1412/blog_bed@main/img/image-20230213104225103.png" alt="image-20230213104225103"></p>
+<p>设想有一个弹簧：现在在平衡位置上，拉它一下，然后松手，这时它会震荡起来，因为阻力很小，它可能会震荡很长时间，才会重新停在平衡位置。</p>
+<p>请想象一下：要是把上图所示的系统浸没在水里，同样拉它一下 ：这种情况下，重新停在平衡位置的时间就短得多。</p>
+<p>此时需要一个控制作用，让被控制的物理量的“变化速度”趋于0，即类似于“阻尼”的作用。</p>
+<p>因为，当比较接近目标时，P的控制作用就比较小了，越接近目标，P的作用越温柔，有很多内在的或者外部的因素，使控制量发生小范围的摆动。</p>
+<p>D的作用就是让物理量的速度趋于0，只要什么时候，这个量具有了速度，D就向相反的方向用力，尽力刹住这个变化。</p>
+<p>Kd参数越大，向速度相反方向刹车的力道就越强，如果是平衡小车，加上P和D两种控制作用，如果参数调节合适，它应该可以站起来了。<br><strong>（3）Ki积分增益</strong></p>
+<p>Ki积分控制考虑过去误差，将误差值过去一段时间和（误差和）乘以一个正值的常数Ki。</p>
+<p>还是以热水为例，假如有个人把加热装置带到了非常冷的地方，开始烧水了，需要烧到50℃。</p>
+<p>在P的作用下，水温慢慢升高，直到升高到45℃时，他发现了一个不好的事情：天气太冷，水散热的速度，和P控制的加热的速度相等了。</p>
+<p><strong>这可怎么办？</strong></p>
+<ul>
+<li><p>P兄这样想：我和目标已经很近了，只需要轻轻加热就可以了。</p>
+</li>
+<li><p>D兄这样想：加热和散热相等，温度没有波动，我好像不用调整什么。</p>
+</li>
+<li><p>于是，水温永远地停留在45℃，永远到不了50℃。</p>
+</li>
+</ul>
+<p>根据常识，我们知道，应该进一步增加加热的功率，可是增加多少该如何计算呢？</p>
+<p>前辈科学家们想到的方法是真的巧妙，设置一个积分量，只要偏差存在，就不断地对偏差进行积分（累加），并反应在调节力度上。</p>
+<p>这样一来，即使45℃和50℃相差不是太大，但是随着时间的推移，只要没达到目标温度，这个积分量就不断增加，系统就会慢慢意识到：还没有到达目标温度，该增加功率啦！</p>
+<p>到了目标温度后，假设温度没有波动，积分值就不会再变动，这时，加热功率仍然等于散热功率，但是，温度是稳稳的50℃。</p>
+<p>Ki的值越大，积分时乘的系数就越大，积分效果越明显，所以，I的作用就是，减小静态情况下的误差，让受控物理量尽可能接近目标值。</p>
+<p><strong>I在使用时还有个问题：需要设定积分限制，防止在刚开始加热时，就把积分量积得太大，难以控制。</strong></p>
+<h1 id="2、PID算法参数调试"><a href="#2、PID算法参数调试" class="headerlink" title="2、PID算法参数调试"></a>2、PID算法参数调试</h1><p>PID算法的参数调试是指通过调整控制参数（比例增益、积分增益/时间、微分增益/时间）<strong>让系统达到最佳的控制效果</strong>。</p>
+<p>调试中稳定性（不会有发散性的震荡）是首要条件，此外，不同系统有不同的行为，不同的应用其需求也不同，而且这些需求还可能会互相冲突。</p>
+<p><a target="_blank" rel="noopener" href="https://rossning92.github.io/pid-simulation/">可以通过这个自己动手调节一下，看看结果如何🐧</a></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.staticaly.com/gh/QM1412/blog_bed@main/img/image-20230213105127774.png" alt="image-20230213105127774"></p>
+<p>PID算法只有三个参数，在原理上容易说明，但PID算法参数调试是一个困难的工作，因为要符合一些特别的判据，而且PID控制有其限制存在。</p>
+<p><strong>1、稳定性</strong></p>
+<p>若PID算法控制器的参数未挑选妥当，其控制器输出可能是不稳定的，也就是其输出发散，过程中可能有震荡，也可能没有震荡，且其输出只受饱和或是机械损坏等原因所限制。不稳定一般是因为过大增益造成，特别是针对延迟时间很长的系统。</p>
+<p>2、最佳性能</p>
+<p>PID控制器的最佳性能可能和针对过程变化或是设定值变化有关，也会随应用而不同。</p>
+<p>两个基本的需求是调整能力（regulation，干扰拒绝，使系统维持在设定值）及命令追随 （设定值变化下，控制器输出追随设定值的反应速度）。有关命令追随的一些判据包括有上升时间及整定时间。有些应用可能因为安全考量，不允许输出超过设定值，也有些应用要求在到达设定值过程中的能量可以最小化。</p>
+<p><strong>3、各调试方法对比</strong></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.staticaly.com/gh/QM1412/blog_bed@main/img/image-20230213105526182.png" alt="image-20230213105526182"></p>
+<p><strong>4、调整PID参数对系统的影响</strong> </p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.staticaly.com/gh/QM1412/blog_bed@main/img/image-20230213105552097.png" alt="image-20230213105552097"></p>
+<p><strong>参考资料：</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_38106923/article/details/109545445?ops_request_misc=&request_id=&biz_id=102&utm_term=pid&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-0-109545445.142%5Ev73%5Einsert_down2,201%5Ev4%5Eadd_ask,239%5Ev1%5Econtrol&spm=1018.2226.3001.4187"> 一文搞懂PID控制算法</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI4MDI4MDE5Ng==&mid=2247488157&idx=2&sn=3b214c5ee27da1a0075b51d886b9f580&chksm=ebbbbf76dccc36603e441e89aca2f61ad22858c49756e51c601d213acd4778c1ff5b2b56fb0f&scene=21#wechat_redirect">PID原理和参数调试</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI4MDA2OTM4MA==&mid=2459414238&idx=1&sn=82feaac579b491942e487c2e0622d5c9&chksm=fcdd1ab5cbaa93a3d14f96c221cc6883f113c4954f40fd34284eae8cec1cc893d6d482f3c91f&mpshare=1&scene=1&srcid=0924twXOIV8SKMcwY97lY428&sharer_sharetime=1600949251548&sharer_shareid=4c58b3600d67a71ab64a1eeb5ac2a392&key=6de1ce3c70b324a40741efe7e69941de25bb83453933cba79214d7f9d0c3e7abe41ac09f158ce2d42ddfe68d2f092a502ddec3f9634d7ca431a9c752b49846e6b54d4c3f516389f7fc0517e5a70da30396d98774a5b367d067d5622975378dbcbd9bf2cdd993f9c95452e721690a0e80d12b426b5f2186a5bf9ff971a551917d&ascene=1&uin=MTg5Mzg2MjgyOA==&devicetype=Windows+10+x64&version=6300002f&lang=zh_CN&exportkey=Aejrx9ckEPq6didl4xP09gA=&pass_ticket=d7pYWgu6Wqd0XTmEgAxex08gu2s/z09DL17Lrry7UfvPpjphxapcAp4zmziElkpo&wx_header=0">谁曾想，听了个故事秒懂了PID！</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://xyxy71.github.io">liu☆☆</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a target="_blank" rel="noopener" href="https://qm1412.github.io/2023/02/13/pid01/">https://qm1412.github.io/2023/02/13/pid01/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/STM32/">STM32</a></div><div class="post_share"><div class="social-share" data-image="https://s1.vika.cn/space/2023/01/27/235800f902f945cba7a5d070775ed46f" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/01/12/2023-3-20/"><img class="next-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/o.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">GPIO输入以及C语言</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/sq.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">liu☆☆</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xyxy71"><i class="fab fa-github"></i><span>go to lxx small home</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xyxy71" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:1966388974@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">hi,welcome to my nest</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1%E3%80%81PID%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="toc-text">1、PID的概念</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2%E3%80%81PID%E7%AE%97%E6%B3%95%E5%8F%82%E6%95%B0%E8%B0%83%E8%AF%95"><span class="toc-text">2、PID算法参数调试</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/03/21/pid01/" title="PID算法(一)"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s1.vika.cn/space/2023/01/27/235800f902f945cba7a5d070775ed46f" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PID算法(一)"/></a><div class="content"><a class="title" href="/2023/03/21/pid01/" title="PID算法(一)">PID算法(一)</a><time datetime="2023-03-21T03:08:08.804Z" title="Created 2023-03-21 11:08:08">2023-03-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/01/12/2023-3-20/" title="GPIO输入以及C语言"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/o.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="GPIO输入以及C语言"/></a><div class="content"><a class="title" href="/2023/01/12/2023-3-20/" title="GPIO输入以及C语言">GPIO输入以及C语言</a><time datetime="2023-01-12T08:06:22.000Z" title="Created 2023-01-12 16:06:22">2023-01-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/01/12/pilipala/" title="pilipala"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/f.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="pilipala"/></a><div class="content"><a class="title" href="/2023/01/12/pilipala/" title="pilipala">pilipala</a><time datetime="2023-01-12T08:06:22.000Z" title="Created 2023-01-12 16:06:22">2023-01-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/01/06/2023-1-16/" title="happy day!"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/g.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="happy day!"/></a><div class="content"><a class="title" href="/2023/01/06/2023-1-16/" title="happy day!">happy day!</a><time datetime="2023-01-06T14:35:00.000Z" title="Created 2023-01-06 22:35:00">2023-01-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/01/04/hello-world/" title="Hello World"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/o.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2023/01/04/hello-world/" title="Hello World">Hello World</a><time datetime="2023-01-04T15:11:58.161Z" title="Created 2023-01-04 23:11:58">2023-01-04</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By liu☆☆</div><div class="footer_custom_text">春祺夏安，秋绥冬宁</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="Toggle Between Traditional Chinese And Simplified Chinese">绻?</button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_footer_beautify_injector_config(){
+    var parent_div_git = document.getElementById('footer-wrap');
+    var item_html = '<div id="workboard"></div><p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" data-title="博客框架为Hexo_v6.2.0" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&amp;logo=hexo" alt=""/></a><a class="github-badge" target="_blank" href="https://butterfly.js.org/" style="margin-inline:5px" data-title="主题版本Butterfly_v4.3.1" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&amp;logo=bitdefender" alt=""/></a><a class="github-badge" target="_blank" href="https://vercel.com/" style="margin-inline:5px" data-title="本站采用多线部署，主线路托管于Vercel" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Hosted-Vercel-brightgreen?style=flat&amp;logo=Vercel" alt=""/></a><a class="github-badge" target="_blank" href="https://dashboard.4everland.org/" style="margin-inline:5px" data-title="本站采用多线部署，备用线路托管于4EVERLAND" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Hosted-4EVERLAND-22DDDD?style=flat&amp;logo=IPFS" alt=""/></a><a class="github-badge" target="_blank" href="https://github.com/" style="margin-inline:5px" data-title="本站项目由Github托管" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&amp;logo=GitHub" alt=""/></a><a class="github-badge" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="margin-inline:5px" data-title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&amp;logo=Claris" alt=""/></a></p>';
+    console.log('已挂载butterfly_footer_beautify')
+    parent_div_git.insertAdjacentHTML("beforeend",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_footer_beautify_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_footer_beautify_injector_config();
+  }
+  </script><script async src="/js/runtime.js"></script><!-- hexo injector body_end end --></body></html>
