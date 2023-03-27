@@ -4,6 +4,19 @@
   
     
     <entry>
+      <title>封装驱动函数</title>
+      <link href="/2023/03/27/%E5%B0%81%E8%A3%85%E9%A9%B1%E5%8A%A8%E5%87%BD%E6%95%B0/"/>
+      <url>/2023/03/27/%E5%B0%81%E8%A3%85%E9%A9%B1%E5%8A%A8%E5%87%BD%E6%95%B0/</url>
+      
+        <content type="html"><![CDATA[<p>模块化编程：提取驱动函数，封装在.c和.h文件<br>在工程文件夹新建Hardware存放硬件驱动，回到KILL，点击三个箱子的图标，新建组Groups叫Hardware,再点击魔术棒按钮，选择C/C++,点击三个点的按钮，把新建的Hardware文件夹添加到头文件路径。<br>Hardware右键新建.C和.H文件叫LED，点击三个点按钮添加路径<br><img src="/img/19.jpg"><br>.H用来存放这个驱动程序可以对外提供的函数或者变量声明。第一行添加一个防止头文件重复包含的代码（格式固定）假如没有定义，就定义，最后和if呼应，注意！这个要以空行结尾<br><img src="/img/21.jpg"><br>.C第一行添加32的头文件，首先写初始化LED，里面就是写打开时钟，配置端口初始化这些东东<br><img src="/img/20.jpg"><br>在最后面加上GPIO_SetBits(GPIO_Pin_1 | GPIO_Pin_2<br>);这样不操作LED则LED是熄灭的。若不加这句则LED默认低电平会亮。<br>以后直接调用LED_Init(void)这个函数就好了，因为要被外部引用，所以将void LED_Init(void)赋值到.h文件中，别忘记加分号。这样就是对模块外部声明，这个函数是可以被外部调用的函数<br>在main.c文件中加入#include”LED.h”，之后在main里面直接打上LED_Iint();就可完成LED初始化<br><img src="/img/24.jpg"><br><img src="/img/23.jpg"><br>杂七杂八：读取按键上拉输入。uint8_t就是unsigned char的意思。按键delay20ms消抖。循环之前先初始化。</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>数模论文</title>
       <link href="/2023/03/24/shumo%20lunwen/"/>
       <url>/2023/03/24/shumo%20lunwen/</url>
@@ -55,11 +68,11 @@
     
     
     <entry>
-      <title>pilipala</title>
-      <link href="/2023/01/12/pilipala/"/>
-      <url>/2023/01/12/pilipala/</url>
+      <title>GPIO输入以及C语言</title>
+      <link href="/2023/01/12/2023-3-20/"/>
+      <url>/2023/01/12/2023-3-20/</url>
       
-        <content type="html"><![CDATA[<p>Today, my sister cooked a packet of turkey noodles, and I took a bite, which made me very hot.</p><p><img src="/img/f.jpg" alt="Duckling"></p>]]></content>
+        <content type="html"><![CDATA[<p>按键抖动：过滤，加一段延时<br><img src="/img/u.jpg"><br>若遇到电路中一端接电路，另一端接地的电容，考虑滤波电容的作用，使电路稳定，在电路分析的时候可以遮掉<br>传感器：红外发射管和接收管可以做寻迹小车<br><img src="/img/v.jpg"><br>左上角第一个：按键按下，接地低电平，按键松开，悬空电压不稳定，加个上拉电阻，则稳定PA0高电平<br>第二个图外接上拉电阻：可以想象上拉电阻为一个弹簧按键松开上拉高电平 按键按下接GND为无穷大的力低电平。PA0可以控制为浮空或者上拉，两个上拉高电平稳定低电平损耗<br>第三个内接下拉：同理第四个了解即可<br>C语言<br>数据类型<br><img src="/img/w.jpg"><br>Char字符按道理应该存放字符，但是单片机中用来存放整数<br>宏定义“#define”<br>用途：用一个字符代替一个数字，将数据参数映射到一个字符串上，<br><img src="/img/x.jpg"><br>关键字Typedef:<br>用途，将较长的变量类型换个名字，便于使用<br><img src="/img/1.jpg"><br>两者区别：<br>宏定义新名字在左边，不用分号；任何名字都能换<br>typedef新名字在右边，要分号；只能专门给变量类型换名字<br>给变量类型重命名一般用typedef<br>结构体：struct<br>用途：数据打包，不同类型变量的合集<br><img src="/img/2.jpg"><br>地址指针加-&gt;结构体名字<br>用结构体变量的名字，用.来引出结构体成员<br><img src="/img/3.jpg"><br>若名字太长结构体不方便<br><img src="/img/4.jpg"><br>此时可以用typedef<br><img src="/img/5.jpg"><br>到时候要再定义那个结构体直接用StructName替换一长串即可<br>枚举：enum<br>用途：定义一个取值受限制的整型变量，用于限制变量取值范围<br>比如定义一个变量用来存储星期的值，理论上1-7，定义一个整型变量，那么这个变量去什么数都可以不受到限制，这个时候出现数据不合法如星期八，则可以用枚举<br>定义和应用：<br>{Monday=1,Tuesday=2，Wednesday=3}week;如果数按顺序累加赋值可省略{Monday=1,Tuesday，Wednesday}week;<br><img src="/img/6.jpg"><br><img src="/img/7.jpg"></p>]]></content>
       
       
       
@@ -68,11 +81,24 @@
     
     
     <entry>
-      <title>GPIO输入以及C语言</title>
-      <link href="/2023/01/12/2023-3-20/"/>
-      <url>/2023/01/12/2023-3-20/</url>
+      <title>OLED</title>
+      <link href="/2023/01/12/OLED/"/>
+      <url>/2023/01/12/OLED/</url>
       
-        <content type="html"><![CDATA[<p>按键抖动：过滤，加一段延时<br><img src="/img/u.jpg"><br>若遇到电路中一端接电路，另一端接地的电容，考虑滤波电容的作用，使电路稳定，在电路分析的时候可以遮掉<br>传感器：红外发射管和接收管可以做寻迹小车<br><img src="/img/v.jpg"><br>左上角第一个：按键按下，接地低电平，按键松开，悬空电压不稳定，加个上拉电阻，则稳定PA0高电平<br>第二个图外接上拉电阻：可以想象上拉电阻为一个弹簧按键松开上拉高电平 按键按下接GND为无穷大的力低电平。PA0可以控制为浮空或者上拉，两个上拉高电平稳定低电平损耗<br>第三个内接下拉：同理第四个了解即可<br>C语言<br>数据类型<br><img src="/img/w.jpg"><br>Char字符按道理应该存放字符，但是单片机中用来存放整数<br>宏定义“#define”<br>用途：用一个字符代替一个数字，将数据参数映射到一个字符串上，<br><img src="/img/x.jpg"><br>关键字Typedef:<br>用途，将较长的变量类型换个名字，便于使用<br><img src="/img/1.jpg"><br>两者区别：<br>宏定义新名字在左边，不用分号；任何名字都能换<br>typedef新名字在右边，要分号；只能专门给变量类型换名字<br>给变量类型重命名一般用typedef<br>结构体：struct<br>用途：数据打包，不同类型变量的合集<br><img src="/img/2.jpg"><br>地址指针加-&gt;结构体名字<br>用结构体变量的名字，用.来引出结构体成员<br><img src="/img/3.jpg"><br>若名字太长结构体不方便<br><img src="/img/4.jpg"><br>此时可以用typedef<br><img src="/img/5.jpg"><br>到时候要再定义那个结构体直接用StructName替换一长串即可<br>枚举：enum<br>用途：定义一个取值受限制的整型变量，用于限制变量取值范围<br>比如定义一个变量用来存储星期的值，理论上1-7，定义一个整型变量，那么这个变量去什么数都可以不受到限制，这个时候出现数据不合法如星期八，则可以用枚举<br>定义和应用：<br>{Monday=1,Tuesday=2，Wednesday=3}week;如果数按顺序累加赋值可省略{Monday=1,Tuesday，Wednesday}week;<br><img src="/img/6.jpg"><br><img src="/img/7.jpg"></p>]]></content>
+        <content type="html"><![CDATA[<p>显示屏调试：显示屏连接单片机，调试信息显示在屏<br>OLED简介：</p><p><img src="/img/25.jpg"><br>驱动函数：<br>showchar（1,2，’a’)一行二列显示字符<br>以下同理，若四位参数则还有一个显示长度<br><img src="/img/26.jpg"></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>pilipala</title>
+      <link href="/2023/01/12/pilipala/"/>
+      <url>/2023/01/12/pilipala/</url>
+      
+        <content type="html"><![CDATA[<p>Today, my sister cooked a packet of turkey noodles, and I took a bite, which made me very hot.</p><p><img src="/img/f.jpg" alt="Duckling"></p>]]></content>
       
       
       
